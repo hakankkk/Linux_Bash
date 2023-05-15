@@ -1,0 +1,11 @@
+#!/bin/bash
+
+log_file="/var/log/ssh_key_access.log"
+
+while true; do
+    inotifywait -e access /path/to/ssh/keys | while read event; do
+        user=$(whoami)
+        time=$(date '+%Y-%m-%d %H:%M:%S')
+        echo "$time - $user accessed SSH key(s)" >> $log_file
+    done
+done
