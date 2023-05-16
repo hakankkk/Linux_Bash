@@ -52,3 +52,6 @@ echo "Environment Variables:"
 echo "----------------------"
 cat /proc/$pid/environ | tr '\0' '\n'
 echo ""
+
+# How to use ıt -> $ ./process_details.sh firefox
+
