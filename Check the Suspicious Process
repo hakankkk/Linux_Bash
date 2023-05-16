@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Check if process name is given as an argument
+if [[ $# -eq 0 ]]; then
+  echo "Please provide a process name."
+  exit 1
+fi
+
+process_name=$1
+
+# Find the process ID (PID) of the given process name
+pid=$(ps -ef | grep -v grep | grep "$process_name" | awk '{print $2}')
+
+# If the process is not found, exit the script
+if [[ -z $pid ]]; then
+  echo "No process found with the name $process_name."
+  exit 1
+fi
+
+echo "Process Details:"
+echo "----------------"
+echo "Process Name: $process_name"
+echo "Process ID (PID): $pid"
+echo ""
+
+# Retrieve the command line arguments of the process
+echo "Command Line Arguments:"
+echo "-----------------------"
+cat /proc/$pid/cmdline
+echo ""
+
+# Retrieve the user who started the process
+echo "User:"
+echo "-----"
+ps -o user= -p $pid
+echo ""
+
+# Retrieve the list of files opened by the process
+echo "Opened Files:"
+echo "-------------"
+lsof -p $pid
+echo ""
+
+# Retrieve the list of network connections established by the process
+echo "Network Connections:"
+echo "--------------------"
+netstat -atnp | grep "$pid/"
+echo ""
+
+# Retrieve the environment variables of the process
+echo "Environment Variables:"
+echo "----------------------"
+cat /proc/$pid/environ | tr '\0' '\n'
+echo ""
