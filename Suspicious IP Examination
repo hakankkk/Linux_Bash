@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Read IP address or URL from user input
+read -p "Enter IP address or URL: " target
+
+# Use netstat to find active connections to the target
+echo -e "\nActive connections to $target:"
+netstat -anp | grep -E "tcp.*$target"
+
+# Use whois to get information about the target's IP address range
+echo -e "\nIP range for $target:"
+whois $(dig +short $target) | grep -E "inetnum|netname"
+
+# Use ping to check if the target is reachable and get its response time
+echo -e "\nPing results for $target:"
+ping -c 5 $target
+
+# Use nmap to scan for open ports on the target
+echo -e "\nOpen ports on $target:"
+nmap -p- $target | grep -E "^(PORT|tcp)"
+# While using it, becareful to make it to external IP addresses. 
+# You are not allowed to scan externals and if it is a C2 or Dropper IP, you will draw all the attention
