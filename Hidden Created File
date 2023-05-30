@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# The directory to search. Modify as necessary.
+dir_to_search="/path/to/your/directory"
+
+# Find hidden files modified in the last 8 hours
+find $dir_to_search -type f -name ".*" -mmin -$((60*8)) -print0 | while read -d $'\0' file
+do
+    # Print file path
+    echo "File: $file"
+
+    # Get owner of the file
+    owner=$(ls -ld "$file" | awk '{print $3}')
+
+    # Print owner
+    echo "Owner: $owner"
+
+    # Get user details
+    user_details=$(getent passwd $owner)
+
+    # Print user details
+    echo "User Details: $user_details"
+done
